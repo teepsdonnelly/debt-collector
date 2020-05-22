@@ -1,0 +1,24 @@
+{
+  "name": "actions-test",
+  "version": "1.0.0",
+  "description": "Testing GitHub actions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teepsdonnelly/actions-test.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/teepsdonnelly/actions-test/issues"
+  },
+  "homepage": "https://github.com/teepsdonnelly/actions-test#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/github": "^2.2.0"
+  }
+}
