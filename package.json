@@ -1,22 +1,22 @@
 {
-  "name": "actions-test",
+  "name": "debt-collector",
   "version": "1.0.0",
-  "description": "Testing GitHub actions.",
+  "description": "An action for keeping track of Technical Debt as it is created",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/teepsdonnelly/actions-test.git"
+    "url": "git+https://github.com/teepsdonnelly/debt-collector.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Terrence Donnelly",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/teepsdonnelly/actions-test/issues"
+    "url": "https://github.com/teepsdonnelly/debt-collector/issues"
   },
-  "homepage": "https://github.com/teepsdonnelly/actions-test#readme",
+  "homepage": "https://github.com/teepsdonnelly/debt-collector#readme",
   "dependencies": {
     "@actions/core": "^1.2.4",
     "@actions/github": "^2.2.0"
