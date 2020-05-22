@@ -60,10 +60,12 @@ function createIssue(issueTitle, issueBody) {
       const myToken = core.getInput('myToken');
       const octokit = new github.GitHub(myToken);
 
+      const prHtmlURL = context.payload.pull_request.html_url;
+
       const newIssue = await octokit.issues.create({
         ...context.repo,
         title: "[DEBT] " + issueTitle,
-        body: issueBody
+        body: issueBody + "\r\n\r\n See the [Pull Request that created this Issue](" + prHtmlURL + ")"
       });
 
       console.log("Issue created: [DEBT] " + issueTitle);
