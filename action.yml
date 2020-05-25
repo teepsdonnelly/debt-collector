@@ -1,5 +1,8 @@
 name: 'Generate Issue'
 description: 'Parse a Pull Request and generate a new GitHub issue if needed'
+branding:
+  icon: 'bar-chart'  
+  color: 'blue'
 inputs:
   myToken:  # GITHUB_TOKEN
     description: 'The GitHub auth token'
