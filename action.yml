@@ -1,7 +1,7 @@
-name: 'Generate Issue'
-description: 'Parse a Pull Request and generate a new GitHub issue if needed'
+name: 'Generate technical debt issue'
+description: 'Parse pull request body/comment and automatically generate GitHub issues for technical debt'
 branding:
-  icon: 'bar-chart'  
+  icon: 'bar-chart'
   color: 'blue'
 inputs:
   myToken:  # GITHUB_TOKEN
