@@ -1,14 +1,14 @@
 # Debt Collector
 
-An action for keeping track of Technical Debt as it is created
+An action for keeping track of technical debt as it is created
 
 ### Current action:
-  - Checks if pull request Comment contains descriptors for Technical Debt, if so it creates a GitHub issue based on Technical Debt descriptors used, as outlined below
+  - Checks if pull request Comment contains descriptors for technical debt, if so it creates a GitHub issue based on technical debt descriptors used, as outlined below
 
 ### Next up:
 
 - Estimate descriptor. It would be nice (and scary) to see some relative level of effort pile up with the debt
-- Aggregation of Technical Debt metrics and support for badging on repo, similar to Code Coverage badging, to enable keeping track of technical debt versus maintainable code at a glance
+- Aggregation of technical debt metrics and support for badging on repo, similar to Code Coverage badging, to enable keeping track of technical debt versus maintainable code at a glance
 
 ### Example usage
 
