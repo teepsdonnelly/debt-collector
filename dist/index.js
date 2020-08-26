@@ -7779,54 +7779,52 @@ const core = __importStar(__webpack_require__(470))
 const github = __importStar(__webpack_require__(469))
 function run () {
   return __awaiter(this, void 0, void 0, function * () {
-    try {
-      const body = yield getBody().catch(err => {
-        core.setFailed(err)
-        return ''
-      })
-      const options = {
-        titlePrefix: core.getInput('title_prefix'),
-        titleStart: core.getInput('title_regex'),
-        titleEnd: core.getInput('title_end'),
-        bodyStart: core.getInput('body_start_regex'),
-        bodyEnd: core.getInput('body_end')
-      }
-      options.titleEndRegex = modeSwitch(
-        'title',
-        options.titleEnd,
-        options.titleStart
+    const body = yield getBody().catch(err => {
+      core.setFailed(err)
+    })
+    const options = {
+      titlePrefix: core.getInput('title_prefix'),
+      titleStart: core.getInput('title_regex'),
+      titleEnd: core.getInput('title_end'),
+      bodyStart: core.getInput('body_start_regex'),
+      bodyEnd: core.getInput('body_end')
+    }
+    options.titleEndRegex = modeSwitch(
+      'title',
+      options.titleEnd,
+      options.titleStart
+    )
+    options.bodyEndRegex = modeSwitch(
+      'body',
+      options.bodyEnd,
+      options.bodyStart
+    )
+    const debtIssueTitle = yield parseContent(
+      body,
+      options.titleStart,
+      options.titleEnd,
+      options.bodyEndRegex
+    ).catch(err => {
+      core.setFailed('Debt Title Error: ' + err)
+    })
+    const debtIssueBody = yield parseContent(
+      body,
+      options.bodyStart,
+      options.bodyEnd,
+      options.bodyEndRegex
+    ).catch(err => {
+      core.setFailed('Debt Body Error: ' + err)
+    })
+    if (debtIssueTitle == '' || !debtIssueTitle) {
+      core.setFailed(
+        'You must at least provide a value for the debt issue title'
       )
-      options.bodyEndRegex = modeSwitch(
-        'body',
-        options.bodyEnd,
-        options.bodyStart
+    } else {
+      createIssue(options.titlePrefix, debtIssueTitle, debtIssueBody).catch(
+        err => {
+          core.setFailed(err)
+        }
       )
-      const debtIssueTitle = yield parseContent(
-        body,
-        options.titleStart,
-        options.titleEnd,
-        options.bodyEndRegex
-      ).catch(err => {
-        core.setFailed(err)
-      })
-      const debtIssueBody = yield parseContent(
-        body,
-        options.bodyStart,
-        options.bodyEnd,
-        options.bodyEndRegex
-      ).catch(err => {
-        core.setFailed(err)
-        return ''
-      })
-      if (debtIssueTitle == '' || !debtIssueTitle) {
-        core.setFailed(
-          'You must at least provide a value for [DEBT_ISSUE_TITLE]'
-        )
-      } else {
-        createIssue(options.titlePrefix, debtIssueTitle, debtIssueBody)
-      }
-    } catch (error) {
-      core.setFailed(error.message)
     }
   })
 }
@@ -7844,15 +7842,17 @@ function modeSwitch (content, mode, StartRegex) {
 }
 function getBody () {
   return new Promise(resolve => {
-    var body
     switch (github.context.eventName) {
       case 'pull_request':
-        body = github.context.payload.pull_request.body
+        if (github.context.payload.pull_request)
+          resolve(github.context.payload.pull_request.body)
       case 'issue':
-        body = github.context.payload.issue.body
+        if (github.context.payload.issue)
+          resolve(github.context.payload.issue.body)
     }
-    if (!body) throw new Error("This context isn't supported")
-    resolve(body)
+    throw new Error(
+      "This context isn't supported: " + github.context.toString()
+    )
   })
 }
 function parseContent (body, StartRegex, endMode, EndRegex) {
