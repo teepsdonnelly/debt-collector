@@ -1,15 +1,17 @@
 on:
   pull_request:
     types: [closed] # We only care about closed PRs. We check for whether it was merged below
+  pull_request_review:
+    types: [submitted] # Checks the pull request reviews for debt
+  issue_comment:
+    types: [created] # Checks the issue comments for debt
 
 jobs:
   check_for_tech_debt:
     runs-on: ubuntu-latest
     name: A job to check if a merged PR had tech debt and create an issue if so
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        if: github.event.pull_request.merged # We only want to track tech debt for things that get merged
+      - uses: actions/checkout@v2
       - name: Create ticket step
         id: createTicket
         uses: ./
