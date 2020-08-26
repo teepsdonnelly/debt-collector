@@ -53,7 +53,7 @@ async function run () {
       options.titleEnd,
       options.bodyEndRegex
     ).catch(err => {
-      core.setFailed(err)
+      core.setFailed('Debt Title Error: ' + err)
     })
 
     /**
@@ -67,7 +67,7 @@ async function run () {
       options.bodyEnd,
       options.bodyEndRegex
     ).catch(err => {
-      core.setFailed(err)
+      core.setFailed('Debt Body Error: ' + err)
       return ''
     })
 
