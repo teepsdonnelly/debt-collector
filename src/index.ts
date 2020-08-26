@@ -77,7 +77,9 @@ async function run () {
      * @since 1.0.0
      */
     if (debtIssueTitle == '' || !debtIssueTitle) {
-      core.setFailed('You must at least provide a value for [DEBT_ISSUE_TITLE]')
+      core.setFailed(
+        'You must at least provide a value for the debt issue title'
+      )
     } else {
       createIssue(options.titlePrefix, debtIssueTitle, debtIssueBody)
     }
