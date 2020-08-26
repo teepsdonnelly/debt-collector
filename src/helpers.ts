@@ -64,8 +64,8 @@ export function parseContent (
      * @since 1.0.0
      */
     const content = body.substring(contentStartIndex, contentEndIndex).trim()
-    core.debug('Content Start: ' + contentStart)
-    core.debug('Content End: ' + contentEnd)
+    core.debug('Content Start: ' + contentStartIndex)
+    core.debug('Content End: ' + contentEndIndex)
     core.debug('Content: ' + content)
     if (content.length == 0) {
       throw new Error('Content Length is 0')
