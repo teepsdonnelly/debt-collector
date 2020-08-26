@@ -112,7 +112,9 @@ function getBody (): Promise<string> {
         if (github.context.payload.issue)
           resolve(github.context.payload.issue.body)
     }
-    throw new Error("This context isn't supported")
+    throw new Error(
+      "This context isn't supported: " + github.context.toString()
+    )
   })
 }
 
