@@ -20,7 +20,10 @@ type options = {
 async function run () {
   try {
     //@ts-ignore - Get the body of our PR so we can parse it
-    const prBody: string = github.context.payload.pull_request.body
+    const body = await getBody().catch(err => {
+      core.setFailed(err)
+      return ''
+    })
     const options: options = {
       titlePrefix: core.getInput('title_prefix'),
       titleStart: core.getInput('title_regex'),
@@ -45,7 +48,7 @@ async function run () {
      * @since 1.0.0
      */
     const debtIssueTitle = await parseContent(
-      prBody,
+      body,
       options.titleStart,
       options.titleEnd,
       options.bodyEndRegex
@@ -59,7 +62,7 @@ async function run () {
      * @since 1.0.0
      */
     const debtIssueBody = await parseContent(
-      prBody,
+      body,
       options.bodyStart,
       options.bodyEnd,
       options.bodyEndRegex
@@ -85,7 +88,6 @@ async function run () {
 
 /**
  * Switches the mode of the content endpoint
- * !TODO: Confirm this move worked before using
  * @author TGTGamer
  * @since 2.0.0
  */
@@ -100,6 +102,27 @@ function modeSwitch (content: string, mode: string, StartRegex: any) {
     default:
       return ''
   }
+}
+
+/**
+ * Switches the context endpoint to enable comments
+ * @author TGTGamer
+ * @since 2.0.0
+ */
+function getBody (): Promise<string> {
+  return new Promise(resolve => {
+    var body: string | undefined
+    switch (github.context.eventName) {
+      case 'pull_request':
+        //@ts-ignore - Get the pull request body
+        body = github.context.payload.pull_request.body
+      case 'issue':
+        //@ts-ignore - Get the pull request body
+        body = github.context.payload.issue.body
+    }
+    if (!body) throw new Error("This context isn't supported")
+    resolve(body)
+  })
 }
 
 /**
