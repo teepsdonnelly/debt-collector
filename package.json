@@ -1,10 +1,19 @@
 {
   "name": "debt-collector",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "An action for keeping track of Technical Debt as it is created",
-  "main": "index.js",
+  "main": "lib/main.js",
+  "directories": {
+    "lib": "./lib",
+    "doc": "./docs",
+    "test": "./__tests__"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "all": "npm run build && npm run format && npm run package",
+    "build": "tsc",
+    "format": "prettier-standard --write **/*.ts",
+    "format-check": "prettier-standard --check **/*.ts",
+    "package": "ncc build --source-map"
   },
   "repository": {
     "type": "git",
@@ -20,5 +29,11 @@
   "dependencies": {
     "@actions/core": "^1.2.4",
     "@actions/github": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.6.0",
+    "@zeit/ncc": "^0.22.3",
+    "prettier-standard": "^16.4.1",
+    "typescript": "^3.9.7"
   }
 }
