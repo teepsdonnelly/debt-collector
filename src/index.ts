@@ -18,73 +18,64 @@ type options = {
  * @since 2.0.0
  */
 async function run () {
-  try {
-    //@ts-ignore - Get the body of our PR so we can parse it
-    const body = await getBody().catch(err => {
-      core.setFailed(err)
-      return ''
-    })
-    const options: options = {
-      titlePrefix: core.getInput('title_prefix'),
-      titleStart: core.getInput('title_regex'),
-      titleEnd: core.getInput('title_end'),
-      bodyStart: core.getInput('body_start_regex'),
-      bodyEnd: core.getInput('body_end')
-    }
-    options.titleEndRegex = modeSwitch(
-      'title',
-      options.titleEnd,
-      options.titleStart
+  const body = (await getBody().catch(err => {
+    core.setFailed(err)
+  })) as string
+  const options: options = {
+    titlePrefix: core.getInput('title_prefix'),
+    titleStart: core.getInput('title_regex'),
+    titleEnd: core.getInput('title_end'),
+    bodyStart: core.getInput('body_start_regex'),
+    bodyEnd: core.getInput('body_end')
+  }
+  options.titleEndRegex = modeSwitch(
+    'title',
+    options.titleEnd,
+    options.titleStart
+  )
+  options.bodyEndRegex = modeSwitch('body', options.bodyEnd, options.bodyStart)
+
+  /**
+   * Gets the content for title
+   * @author teepsdonnelly, TGTGamer
+   * @since 1.0.0
+   */
+  const debtIssueTitle = (await parseContent(
+    body,
+    options.titleStart,
+    options.titleEnd,
+    options.bodyEndRegex
+  ).catch(err => {
+    core.setFailed('Debt Title Error: ' + err)
+  })) as string
+
+  /**
+   * Gets the content for body
+   * @author teepsdonnelly, TGTGamer
+   * @since 1.0.0
+   */
+  const debtIssueBody = (await parseContent(
+    body,
+    options.bodyStart,
+    options.bodyEnd,
+    options.bodyEndRegex
+  ).catch(err => {
+    core.setFailed('Debt Body Error: ' + err)
+  })) as string
+
+  /**
+   * Creates the issue
+   * @author teepsdonnelly, TGTGamer
+   * @since 1.0.0
+   */
+  if (debtIssueTitle == '' || !debtIssueTitle) {
+    core.setFailed('You must at least provide a value for the debt issue title')
+  } else {
+    createIssue(options.titlePrefix, debtIssueTitle, debtIssueBody).catch(
+      err => {
+        core.setFailed(err)
+      }
     )
-    options.bodyEndRegex = modeSwitch(
-      'body',
-      options.bodyEnd,
-      options.bodyStart
-    )
-
-    /**
-     * Gets the content for title
-     * @author teepsdonnelly, TGTGamer
-     * @since 1.0.0
-     */
-    const debtIssueTitle = await parseContent(
-      body,
-      options.titleStart,
-      options.titleEnd,
-      options.bodyEndRegex
-    ).catch(err => {
-      core.setFailed('Debt Title Error: ' + err)
-    })
-
-    /**
-     * Gets the content for body
-     * @author teepsdonnelly, TGTGamer
-     * @since 1.0.0
-     */
-    const debtIssueBody = await parseContent(
-      body,
-      options.bodyStart,
-      options.bodyEnd,
-      options.bodyEndRegex
-    ).catch(err => {
-      core.setFailed('Debt Body Error: ' + err)
-      return ''
-    })
-
-    /**
-     * Creates the issue
-     * @author teepsdonnelly, TGTGamer
-     * @since 1.0.0
-     */
-    if (debtIssueTitle == '' || !debtIssueTitle) {
-      core.setFailed(
-        'You must at least provide a value for the debt issue title'
-      )
-    } else {
-      createIssue(options.titlePrefix, debtIssueTitle, debtIssueBody)
-    }
-  } catch (error) {
-    core.setFailed(error.message)
   }
 }
 
@@ -113,17 +104,15 @@ function modeSwitch (content: string, mode: string, StartRegex: any) {
  */
 function getBody (): Promise<string> {
   return new Promise(resolve => {
-    var body: string | undefined
     switch (github.context.eventName) {
       case 'pull_request':
-        //@ts-ignore - Get the pull request body
-        body = github.context.payload.pull_request.body
+        if (github.context.payload.pull_request)
+          resolve(github.context.payload.pull_request.body)
       case 'issue':
-        //@ts-ignore - Get the pull request body
-        body = github.context.payload.issue.body
+        if (github.context.payload.issue)
+          resolve(github.context.payload.issue.body)
     }
-    if (!body) throw new Error("This context isn't supported")
-    resolve(body)
+    throw new Error("This context isn't supported")
   })
 }
 
