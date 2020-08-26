@@ -7849,9 +7849,12 @@ function getBody () {
       case 'issue':
         if (github.context.payload.issue)
           resolve(github.context.payload.issue.body)
+      case 'issue_comment':
+        if (github.context.payload.issue)
+          resolve(github.context.payload.comment.body)
     }
     throw new Error(
-      "This context isn't supported: " + JSON.stringify(github.context.payload)
+      "This context isn't supported: " + JSON.stringify(github.context)
     )
   })
 }
