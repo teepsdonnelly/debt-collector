@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Check tests work first
     steps:
+      - uses: actions/checkout@v2
+      - run: |
+          npm i && npm test
       - uses: mattallty/jest-github-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -19,7 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Check tech Debt
     steps:
-      - uses: actions/checkout@v2
       - name: Create ticket step
         id: createTicket
         uses: ./
