@@ -22,6 +22,7 @@ async function run () {
   const body = (await helpers.getBody().catch(err => {
     core.setFailed(err)
   })) as string
+  core.debug(body)
   const options: options = {
     titlePrefix: core.getInput('title_prefix'),
     titleStart: core.getInput('title_regex'),
