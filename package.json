@@ -2,7 +2,7 @@
   "name": "debt-collector",
   "version": "2.0.0",
   "description": "An action for keeping track of Technical Debt as it is created",
-  "main": "lib/main.js",
+  "main": "lib/index.js",
   "directories": {
     "lib": "./lib",
     "doc": "./docs",
