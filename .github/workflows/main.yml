@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v2
         if: github.event.pull_request.merged # We only want to track tech debt for things that get merged
       - name: Create ticket step
-        uses: ./
         id: createTicket
+        uses: ./
         with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
