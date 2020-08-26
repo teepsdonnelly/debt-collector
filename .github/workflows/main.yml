@@ -7,6 +7,14 @@ on:
     types: [created] # Checks the issue comments for debt
 
 jobs:
+  jest:
+    runs-on: ubuntu-latest
+    name: Check tests work first
+    steps:
+      - uses: mattallty/jest-github-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   check_for_tech_debt:
     runs-on: ubuntu-latest
     name: Check tech Debt
