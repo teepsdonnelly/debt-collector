@@ -21,8 +21,6 @@ jobs:
 
   check_for_tech_debt:
     runs-on: ubuntu-latest
-    name: Check tech Debt
-    needs: jest
     steps:
       - uses: actions/checkout@v2
       - name: Create ticket step
@@ -34,7 +32,6 @@ jobs:
 
   check_for_tech_debt_withEndPoint:
     runs-on: ubuntu-latest
-    name: Check tech Debt
     needs: check_for_tech_debt
     steps:
       - uses: actions/checkout@v2
