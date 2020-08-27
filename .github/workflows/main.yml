@@ -18,6 +18,10 @@ jobs:
         if: always()
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: TestCoverage
+        uses: anuraag016/Jest-Coverage-Diff@master
+        with:
+          fullCoverageDiff: false
 
   check_for_tech_debt:
     runs-on: ubuntu-latest
