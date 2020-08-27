@@ -76,5 +76,8 @@ Helps track the progress of this project
 
 ### Next up
 
+- Check to see if debt (issue) already exists (Assigned. @tgtgamer)
+- Store debt in json for later use (Assigned. @tgtgamer)
+- Add comment debt finding (//DEBT, #DEBT, /\*\* DEBT)
 - Estimate descriptor. It would be nice (and scary) to see some relative level of effort pile up with the debt
 - Aggregation of technical debt metrics and support for badging on repo, similar to Code Coverage badging, to enable keeping track of technical debt versus maintainable code at a glance
