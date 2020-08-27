@@ -12,11 +12,11 @@ jobs:
     name: Check tests work first
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          npm i && npm test
-      - uses: mattallty/jest-github-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: yarn && yarn test
+      - uses: tanmen/jest-reporter@v1
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   check_for_tech_debt:
     runs-on: ubuntu-latest

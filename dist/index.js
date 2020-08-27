@@ -5201,9 +5201,9 @@ function parseContent(body, StartRegex, endMode, EndRegex) {
             contentEndIndex = contentEnd.index + (contentEnd[0].length - 1);
         }
         const content = body.substring(contentStartIndex, contentEndIndex).trim();
-        core.debug('Content Start: ' + contentStartIndex);
-        core.debug('Content End: ' + contentEndIndex);
-        core.debug('Content: ' + content);
+        core.info('Content Start: ' + contentStartIndex);
+        core.info('Content End: ' + contentEndIndex);
+        core.info('Content: ' + content);
         if (content.length == 0) {
             throw new Error('Content Length is 0');
         }
@@ -7796,7 +7796,7 @@ function run() {
         const body = (yield helpers.getBody().catch(err => {
             core.setFailed(err);
         }));
-        core.debug(body);
+        core.info('body: ' + body);
         const options = {
             titlePrefix: core.getInput('title_prefix'),
             titleStart: core.getInput('title_regex'),
