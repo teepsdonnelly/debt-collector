@@ -41,12 +41,12 @@ export function parseContent (
      * @since 2.0.0
      */
     const contentStart = body.match(new RegExp(StartRegex, 'im'))
-    if (!contentStart || !contentStart.index) {
-      core.info(
-        `Content start = {regex: ${StartRegex}, content: ${contentStart}}`
-      )
+    core.info(
+      `Content start = {regex: ${StartRegex}, content: ${contentStart}}`
+    )
+    if (!contentStart || !contentStart.index)
       throw new Error('Start not matched')
-    }
+
     const contentStartIndex = contentStart.index + (StartRegex.length - 2)
 
     /**
@@ -55,10 +55,8 @@ export function parseContent (
      * @since 2.0.0
      */
     const contentEnd = body.match(new RegExp(EndRegex, 'im'))
-    if (!contentEnd || !contentEnd.index) {
-      core.info(`Content end = {regex: ${EndRegex}, content: ${contentEnd}}`)
-      throw new Error('End not matched')
-    }
+    core.info(`Content end = {regex: ${EndRegex}, content: ${contentEnd}}`)
+    if (!contentEnd || !contentEnd.index) throw new Error('End not matched')
     var contentEndIndex: number
     if (endMode == 'regex') {
       contentEndIndex = contentEnd.index

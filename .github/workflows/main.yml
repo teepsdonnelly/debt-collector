@@ -29,3 +29,16 @@ jobs:
         uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  check_for_tech_debt_withEndPoint:
+    runs-on: ubuntu-latest
+    name: Check tech Debt
+    needs: jest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create ticket step
+        id: createTicket
+        uses: ./
+        with:
+          body_end: regex
+          token: ${{ secrets.GITHUB_TOKEN }}
