@@ -164,11 +164,11 @@ function run() {
         });
         core.info('body: ' + context.body);
         const options = {
-            titlePrefix: core.getInput('title_prefix'),
-            titleStart: core.getInput('title_regex'),
-            titleEnd: core.getInput('title_end'),
-            bodyStart: core.getInput('body_start_regex'),
-            bodyEnd: core.getInput('body_end'),
+            titlePrefix: core.getInput('title_prefix') || '[DEBT]',
+            titleStart: core.getInput('title_regex') || '<!--\\[DEBT_ISSUE_TITLE\\]-->',
+            titleEnd: core.getInput('title_end') || 'line',
+            bodyStart: core.getInput('body_start_regex') || '<!--\\[DEBT_BODY_START\\]-->',
+            bodyEnd: core.getInput('body_end') || 'paragraph',
             token: core.getInput('token')
         };
         options.titleEndRegex = helpers.modeSwitch('title', options.titleEnd, options.titleStart);
