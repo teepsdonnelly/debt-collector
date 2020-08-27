@@ -53,7 +53,7 @@ async function run () {
       context.body,
       options.titleStart,
       options.titleEnd,
-      options.bodyEndRegex
+      options.titleEndRegex
     )
     .catch(err => {
       core.setFailed('Debt Title Error: ' + err)

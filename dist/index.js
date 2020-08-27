@@ -174,7 +174,7 @@ function run() {
         options.titleEndRegex = helpers.modeSwitch('title', options.titleEnd, options.titleStart);
         options.bodyEndRegex = helpers.modeSwitch('body', options.bodyEnd, options.bodyStart);
         const debtIssueTitle = (yield helpers
-            .parseContent(context.body, options.titleStart, options.titleEnd, options.bodyEndRegex)
+            .parseContent(context.body, options.titleStart, options.titleEnd, options.titleEndRegex)
             .catch(err => {
             core.setFailed('Debt Title Error: ' + err);
         }));
