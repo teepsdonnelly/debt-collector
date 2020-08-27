@@ -82,7 +82,6 @@ export function parseContent (
 
 /**
  * Creates new issue
- * !TODO: Check that moving this hasn't affected functionality
  * @author teepsdonnelly
  * @since 1.0.0
  */
@@ -99,7 +98,7 @@ export async function createIssue (
 
   const newIssue = await octokit.issues.create({
     ...context.repo,
-    title: titlePrefix + ' ' + issueTitle,
+    title: titlePrefix + issueTitle,
     body:
       issueBody +
       spacer +
@@ -108,7 +107,9 @@ export async function createIssue (
       ')'
   })
 
-  console.log('Issue created: ' + titlePrefix + ' ' + issueTitle)
+  console.log(
+    'Issue created: ' + newIssue.data.id + ' ' + titlePrefix + issueTitle
+  )
 }
 /**
  * Switches the context endpoint to enable comments

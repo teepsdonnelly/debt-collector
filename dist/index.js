@@ -94,12 +94,12 @@ function createIssue(titlePrefix, issueTitle, issueBody, HtmlURL, token) {
         const spacer = '\r\n\r\n';
         const context = github.context;
         const octokit = new github.GitHub(token);
-        const newIssue = yield octokit.issues.create(Object.assign(Object.assign({}, context.repo), { title: titlePrefix + ' ' + issueTitle, body: issueBody +
+        const newIssue = yield octokit.issues.create(Object.assign(Object.assign({}, context.repo), { title: titlePrefix + issueTitle, body: issueBody +
                 spacer +
                 'See the [where this Issue was created](' +
                 HtmlURL +
                 ')' }));
-        console.log('Issue created: ' + titlePrefix + ' ' + issueTitle);
+        console.log('Issue created: ' + newIssue.data.id + ' ' + titlePrefix + issueTitle);
     });
 }
 exports.createIssue = createIssue;

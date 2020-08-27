@@ -9,6 +9,7 @@ on:
 jobs:
   jest:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     name: Check tests work first
     steps:
       - uses: actions/checkout@v2
@@ -28,17 +29,19 @@ jobs:
         id: createTicket
         uses: ./
         with:
+          title_prefix: '[debt test 1]'
           token: ${{ secrets.GITHUB_TOKEN }}
 
   check_for_tech_debt_withEndPoint:
     runs-on: ubuntu-latest
     name: Check tech Debt
-    needs: jest
+    needs: check_for_tech_debt
     steps:
       - uses: actions/checkout@v2
       - name: Create ticket step
         id: createTicket
         uses: ./
         with:
+          title_prefix: '[debt test 2]'
           body_end: regex
           token: ${{ secrets.GITHUB_TOKEN }}
