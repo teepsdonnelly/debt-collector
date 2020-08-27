@@ -1,6 +1,6 @@
 on:
   pull_request:
-    types: [closed] # We only care about closed PRs. We check for whether it was merged below
+    types: [opened, edited, closed] # We only care about closed PRs. We check for whether it was merged below
   pull_request_review:
     types: [submitted] # Checks the pull request reviews for debt
   issue_comment:
@@ -9,7 +9,7 @@ on:
 jobs:
   jest:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'edited')
     name: Check tests work first
     steps:
       - uses: actions/checkout@v2
@@ -25,6 +25,7 @@ jobs:
 
   check_for_tech_debt:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_review' || github.event_name == 'issue_comment' || (github.event_name == 'pull_request' && github.event.action == 'closed')
     steps:
       - uses: actions/checkout@v2
       - name: Create ticket step
@@ -37,6 +38,7 @@ jobs:
   check_for_tech_debt_withEndPoint:
     runs-on: ubuntu-latest
     needs: check_for_tech_debt
+    if: github.event_name == 'pull_request_review' || github.event_name == 'issue_comment' || (github.event_name == 'pull_request' && github.event.action == 'closed')
     steps:
       - uses: actions/checkout@v2
       - name: Create ticket step
