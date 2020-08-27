@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import { WebhookPayload } from '@actions/github/lib/interfaces'
 /**
  * Switches the mode of the content endpoint
  * @author TGTGamer
@@ -91,13 +92,12 @@ export async function createIssue (
   titlePrefix: string,
   issueTitle: string,
   issueBody: string,
+  HtmlURL: string,
   token: string
 ) {
   const spacer = '\r\n\r\n'
   const context = github.context
   const octokit = new github.GitHub(token)
-  // @ts-ignore
-  const prHtmlURL = context.payload.pull_request.html_url
 
   const newIssue = await octokit.issues.create({
     ...context.repo,
@@ -105,31 +105,27 @@ export async function createIssue (
     body:
       issueBody +
       spacer +
-      'See the [Pull Request that created this Issue](' +
-      prHtmlURL +
+      'See the [where this Issue was created](' +
+      HtmlURL +
       ')'
   })
 
   console.log('Issue created: ' + titlePrefix + ' ' + issueTitle)
 }
-
 /**
  * Switches the context endpoint to enable comments
  * @author TGTGamer
  * @since 2.0.0
  */
-export function getBody (): Promise<string> {
+export function getContext () {
   return new Promise(resolve => {
     switch (github.context.eventName) {
       case 'pull_request':
-        if (github.context.payload.pull_request)
-          resolve(github.context.payload.pull_request.body)
+        resolve(github.context.payload.pull_request)
       case 'issue':
-        if (github.context.payload.issue)
-          resolve(github.context.payload.issue.body)
+        resolve(github.context.payload.issue)
       case 'issue_comment':
-        if (github.context.payload.issue)
-          resolve(github.context.payload.comment.body)
+        resolve(github.context.payload.comment)
     }
     throw new Error(
       "This context isn't supported: " + JSON.stringify(github.context)

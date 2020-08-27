@@ -19,10 +19,10 @@ type options = {
  * @since 2.0.0
  */
 async function run () {
-  const body = (await helpers.getBody().catch(err => {
+  const context: any = await helpers.getContext().catch(err => {
     core.setFailed(err)
-  })) as string
-  core.info('body: ' + body)
+  })
+  core.info('body: ' + context.body)
   const options: options = {
     titlePrefix: core.getInput('title_prefix') || '[DEBT]',
     titleStart: core.getInput('title_regex') || '<!--\\[DEBT_ISSUE_TITLE\\]-->',
@@ -50,7 +50,7 @@ async function run () {
    */
   const debtIssueTitle = (await helpers
     .parseContent(
-      body,
+      context.body,
       options.titleStart,
       options.titleEnd,
       options.bodyEndRegex
@@ -66,7 +66,7 @@ async function run () {
    */
   const debtIssueBody = (await helpers
     .parseContent(
-      body,
+      context.body,
       options.bodyStart,
       options.bodyEnd,
       options.bodyEndRegex
@@ -88,6 +88,7 @@ async function run () {
         options.titlePrefix,
         debtIssueTitle,
         debtIssueBody,
+        context.html_url,
         options.token
       )
       .catch(err => {

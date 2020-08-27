@@ -44,7 +44,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getBody = exports.createIssue = exports.parseContent = exports.modeSwitch = void 0;
+exports.getContext = exports.createIssue = exports.parseContent = exports.modeSwitch = void 0;
 const core = __importStar(__webpack_require__(2186));
 const github = __importStar(__webpack_require__(5438));
 function modeSwitch(content, mode, StartRegex) {
@@ -91,38 +91,34 @@ function parseContent(body, StartRegex, endMode, EndRegex) {
     });
 }
 exports.parseContent = parseContent;
-function createIssue(titlePrefix, issueTitle, issueBody, token) {
+function createIssue(titlePrefix, issueTitle, issueBody, HtmlURL, token) {
     return __awaiter(this, void 0, void 0, function* () {
         const spacer = '\r\n\r\n';
         const context = github.context;
         const octokit = new github.GitHub(token);
-        const prHtmlURL = context.payload.pull_request.html_url;
         const newIssue = yield octokit.issues.create(Object.assign(Object.assign({}, context.repo), { title: titlePrefix + ' ' + issueTitle, body: issueBody +
                 spacer +
-                'See the [Pull Request that created this Issue](' +
-                prHtmlURL +
+                'See the [where this Issue was created](' +
+                HtmlURL +
                 ')' }));
         console.log('Issue created: ' + titlePrefix + ' ' + issueTitle);
     });
 }
 exports.createIssue = createIssue;
-function getBody() {
+function getContext() {
     return new Promise(resolve => {
         switch (github.context.eventName) {
             case 'pull_request':
-                if (github.context.payload.pull_request)
-                    resolve(github.context.payload.pull_request.body);
+                resolve(github.context.payload.pull_request);
             case 'issue':
-                if (github.context.payload.issue)
-                    resolve(github.context.payload.issue.body);
+                resolve(github.context.payload.issue);
             case 'issue_comment':
-                if (github.context.payload.issue)
-                    resolve(github.context.payload.comment.body);
+                resolve(github.context.payload.comment);
         }
         throw new Error("This context isn't supported: " + JSON.stringify(github.context));
     });
 }
-exports.getBody = getBody;
+exports.getContext = getContext;
 
 
 /***/ }),
@@ -165,10 +161,10 @@ const core = __importStar(__webpack_require__(2186));
 const helpers = __importStar(__webpack_require__(5008));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const body = (yield helpers.getBody().catch(err => {
+        const context = yield helpers.getContext().catch(err => {
             core.setFailed(err);
-        }));
-        core.info('body: ' + body);
+        });
+        core.info('body: ' + context.body);
         const options = {
             titlePrefix: core.getInput('title_prefix') || '[DEBT]',
             titleStart: core.getInput('title_regex') || '<!--\\[DEBT_ISSUE_TITLE\\]-->',
@@ -180,12 +176,12 @@ function run() {
         options.titleEndRegex = helpers.modeSwitch('title', options.titleEnd, options.titleStart);
         options.bodyEndRegex = helpers.modeSwitch('body', options.bodyEnd, options.bodyStart);
         const debtIssueTitle = (yield helpers
-            .parseContent(body, options.titleStart, options.titleEnd, options.bodyEndRegex)
+            .parseContent(context.body, options.titleStart, options.titleEnd, options.bodyEndRegex)
             .catch(err => {
             core.setFailed('Debt Title Error: ' + err);
         }));
         const debtIssueBody = (yield helpers
-            .parseContent(body, options.bodyStart, options.bodyEnd, options.bodyEndRegex)
+            .parseContent(context.body, options.bodyStart, options.bodyEnd, options.bodyEndRegex)
             .catch(err => {
             core.setFailed('Debt Body Error: ' + err);
         }));
@@ -194,7 +190,7 @@ function run() {
         }
         else {
             helpers
-                .createIssue(options.titlePrefix, debtIssueTitle, debtIssueBody, options.token)
+                .createIssue(options.titlePrefix, debtIssueTitle, debtIssueBody, context.html_url, options.token)
                 .catch(err => {
                 core.setFailed(err);
             });
