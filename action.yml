@@ -27,7 +27,7 @@ inputs:
   body_end_regex:
     description: 'Allows you to change the prefix used for debt issues'
     required: false
-    default: '<!--\\[DEBT_BODY_END\\]-->'
+    default: '<!--\[DEBT_BODY_END\]-->'
   token:
     description: 'The GitHub auth token'
     required: true
