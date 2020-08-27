@@ -9,23 +9,27 @@ inputs:
     required: false
     default: '[DEBT]'
   title_start:
-    description: 'Allows you to change the prefix used for debt issues'
+    description: 'Allows you to change the regex used for debt issues'
     required: false
-    default: '<!--\\[DEBT_ISSUE_TITLE\\]-->'
+    default: '<!--\[DEBT_ISSUE_TITLE\]-->'
   title_end:
     description: 'Allows you to define the title endpoint'
     required: false
     default: 'line'
-  body_start:
-    description: 'Allows you to change the prefix used for debt issues'
+  title_end_regex:
+    description: 'Allows you to change the regex used for title ending'
     required: false
-    default: '<!--\\[DEBT_BODY_START\\]-->'
+    default: '<!--\[DEBT_TITLE_END\]-->'
+  body_start:
+    description: 'Allows you to change the regex used for debt issues'
+    required: false
+    default: '<!--\[DEBT_BODY_START\]-->'
   body_end:
     description: 'Allows you to define the body endpoint'
     required: false
     default: 'paragraph'
   body_end_regex:
-    description: 'Allows you to change the prefix used for debt issues'
+    description: 'Allows you to change the regex used for body ending'
     required: false
     default: '<!--\[DEBT_BODY_END\]-->'
   token:

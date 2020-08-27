@@ -108,7 +108,7 @@ export async function createIssue (
   })
 
   console.log(
-    'Issue created: ' + newIssue.data.id + ' ' + titlePrefix + issueTitle
+    'Issue created: ' + newIssue.data.number + ' ' + titlePrefix + issueTitle
   )
 }
 /**
