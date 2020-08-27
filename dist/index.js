@@ -109,7 +109,7 @@ function getContext() {
             case 'pull_request':
                 resolve(github.context.payload.pull_request);
             case 'pull_request_review':
-                resolve(github.context.payload.pull_request);
+                resolve(github.context.payload.review);
             case 'issue_comment':
                 resolve(github.context.payload.comment);
         }
