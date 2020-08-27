@@ -120,8 +120,8 @@ export function getContext () {
     switch (github.context.eventName) {
       case 'pull_request':
         resolve(github.context.payload.pull_request)
-      case 'issue':
-        resolve(github.context.payload.issue)
+      case 'pull_request_review':
+        resolve(github.context.payload.pull_request)
       case 'issue_comment':
         resolve(github.context.payload.comment)
     }
