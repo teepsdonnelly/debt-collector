@@ -1,17 +1,50 @@
 on:
   pull_request:
-    types: [closed] # We only care about closed PRs. We check for whether it was merged below
+    types: [opened, edited, closed] # We only care about closed PRs. We check for whether it was merged below
+  pull_request_review:
+    types: [submitted] # Checks the pull request reviews for debt
+  issue_comment:
+    types: [created] # Checks the issue comments for debt
 
 jobs:
+  jest:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'edited')
+    name: Check tests work first
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn && yarn test
+      - uses: tanmen/jest-reporter@v1
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: TestCoverage
+        uses: anuraag016/Jest-Coverage-Diff@master
+        with:
+          fullCoverageDiff: false
+
   check_for_tech_debt:
     runs-on: ubuntu-latest
-    name: A job to check if a merged PR had tech debt and create an issue if so
+    if: github.event_name == 'pull_request_review' || github.event_name == 'issue_comment' || (github.event_name == 'pull_request' && github.event.action == 'closed')
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        if: github.event.pull_request.merged # We only want to track tech debt for things that get merged
+      - uses: actions/checkout@v2
       - name: Create ticket step
         id: createTicket
         uses: ./
         with:
+          title_prefix: '[debt test 1]'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  check_for_tech_debt_withEndPoint:
+    runs-on: ubuntu-latest
+    needs: check_for_tech_debt
+    if: github.event_name == 'pull_request_review' || github.event_name == 'issue_comment' || (github.event_name == 'pull_request' && github.event.action == 'closed')
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create ticket step
+        id: createTicket
+        uses: ./
+        with:
+          title_prefix: '[debt test 2]'
+          body_end: regex
           token: ${{ secrets.GITHUB_TOKEN }}
