@@ -14,7 +14,7 @@
     "format": "prettier-standard --write **/*.ts",
     "format-check": "prettier-standard --check **/*.ts",
     "package": "ncc build --source-map",
-    "test": "jest --coverage --coverageDirectory='./' --coverageReporters=json-summary"
+    "test": "jest --coverage --coverageReporters=json-summary --coverageDirectory='./' --json --outputFile=result.json --testLocationInResults"
   },
   "jest": {
     "verbose": true,
