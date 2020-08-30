@@ -44,9 +44,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getContext = exports.createIssue = exports.parseContent = exports.modeSwitch = void 0;
+exports.createIssue = exports.parseContent = exports.modeSwitch = exports.getContext = void 0;
 const core = __importStar(__webpack_require__(2186));
 const github = __importStar(__webpack_require__(5438));
+function getContext() {
+    core.debug(JSON.stringify(github.context));
+    return new Promise(resolve => {
+        switch (github.context.eventName) {
+            case 'pull_request':
+                resolve(github.context.payload.pull_request);
+            case 'pull_request_review':
+                resolve(github.context.payload.review);
+            case 'issue_comment':
+                resolve(github.context.payload.comment);
+        }
+        throw new Error("This context isn't supported: " + JSON.stringify(github.context));
+    });
+}
+exports.getContext = getContext;
 function modeSwitch(content, mode, StartRegex) {
     switch (mode) {
         case 'paragraph':
@@ -63,12 +78,12 @@ exports.modeSwitch = modeSwitch;
 function parseContent(body, StartRegex, endMode, EndRegex) {
     return new Promise(resolve => {
         const contentStart = body.match(new RegExp(StartRegex, 'im'));
-        core.info(`Content start = {regex: ${StartRegex}, content: ${contentStart}}`);
+        core.debug(`Content start = {regex: ${StartRegex}, content: ${contentStart}}`);
         if (!contentStart || !contentStart.index)
             throw new Error('Start not matched');
         const contentStartIndex = contentStart.index + (StartRegex.length - 2);
         const contentEnd = body.match(new RegExp(EndRegex, 'im'));
-        core.info(`Content end = {regex: ${EndRegex}, content: ${contentEnd}}`);
+        core.debug(`Content end = {regex: ${EndRegex}, content: ${contentEnd}}`);
         if (!contentEnd || !contentEnd.index)
             throw new Error('End not matched');
         var contentEndIndex;
@@ -79,9 +94,9 @@ function parseContent(body, StartRegex, endMode, EndRegex) {
             contentEndIndex = contentEnd.index + (contentEnd[0].length - 1);
         }
         const content = body.substring(contentStartIndex, contentEndIndex).trim();
-        core.info('Content Start: ' + contentStartIndex);
-        core.info('Content End: ' + contentEndIndex);
-        core.info('Content: ' + content);
+        core.debug('Content Start: ' + contentStartIndex);
+        core.debug('Content End: ' + contentEndIndex);
+        core.debug('Content: ' + content);
         if (content.length == 0) {
             throw new Error('Content Length is 0');
         }
@@ -103,20 +118,6 @@ function createIssue(titlePrefix, issueTitle, issueBody, HtmlURL, token) {
     });
 }
 exports.createIssue = createIssue;
-function getContext() {
-    return new Promise(resolve => {
-        switch (github.context.eventName) {
-            case 'pull_request':
-                resolve(github.context.payload.pull_request);
-            case 'pull_request_review':
-                resolve(github.context.payload.review);
-            case 'issue_comment':
-                resolve(github.context.payload.comment);
-        }
-        throw new Error("This context isn't supported: " + JSON.stringify(github.context));
-    });
-}
-exports.getContext = getContext;
 
 
 /***/ }),
@@ -162,7 +163,7 @@ function run() {
         const context = yield helpers.getContext().catch(err => {
             core.setFailed(err);
         });
-        core.info('body: ' + context.body);
+        core.debug('body: ' + context.body);
         const options = {
             titlePrefix: core.getInput('title_prefix') || '[DEBT]',
             titleStart: core.getInput('title_regex') || '<!--\\[DEBT_ISSUE_TITLE\\]-->',

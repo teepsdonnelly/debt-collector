@@ -22,7 +22,7 @@ async function run () {
   const context: any = await helpers.getContext().catch(err => {
     core.setFailed(err)
   })
-  core.info('body: ' + context.body)
+  core.debug('body: ' + context.body)
   const options: options = {
     titlePrefix: core.getInput('title_prefix') || '[DEBT]',
     titleStart: core.getInput('title_regex') || '<!--\\[DEBT_ISSUE_TITLE\\]-->',
