@@ -32,6 +32,15 @@ inputs:
     description: 'Allows you to change the regex used for body ending'
     required: false
     default: '<!--\[DEBT_BODY_END\]-->'
+  jest:
+    description: 'Toggle Jest coverage intergration'
+    default: 'true'
+    required: false
+  storage_file:
+    description: 'Change where this action stores data. Defaults to package'
+    default: 'package.json'
+    required: false
+
   token:
     description: 'The GitHub auth token'
     required: true

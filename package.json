@@ -14,7 +14,22 @@
     "format": "prettier-standard --write **/*.ts",
     "format-check": "prettier-standard --check **/*.ts",
     "package": "ncc build --source-map",
-    "test": "jest --json --outputFile=result.json --testLocationInResults"
+    "test": "jest --coverage --coverageDirectory='./' --coverageReporters=json-summary"
+  },
+  "jest": {
+    "verbose": true,
+    "clearMocks": true,
+    "moduleFileExtensions": ["js", "ts"],
+    "testEnvironment": "node",
+    "testMatch": ["**/*.test.ts"],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    }
+  },
+  "technical_debt": {
+    "tracking": "https://github.com/teepsdonnelly/debt-collector/issues?q=in%3Atitle+is%3Aopen+debt",
+    "count": "4",
+    "fixed": "0"
   },
   "repository": {
     "type": "git",
